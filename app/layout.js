@@ -1,24 +1,31 @@
+import "./globals.css";
 import { AuthProvider } from "./components/AuthContext";
 
 export const metadata = {
-  title: "SipStreak 🍷🔥",
-  description: "Master wine knowledge — grapes, regions, tasting, and food pairings. Duolingo-style wine learning app.",
+  title: "SipStreak — Master Wine Knowledge",
+  description: "Your personal wine companion. Learn, taste, discover.",
   openGraph: {
-    title: "SipStreak 🍷🔥",
-    description: "Master wine knowledge — grapes, regions, tasting, and food pairings.",
+    title: "SipStreak — Master Wine Knowledge",
+    description: "Your personal wine companion. Learn, taste, discover.",
     url: "https://sipstreak.com",
     siteName: "SipStreak",
     type: "website",
   },
 };
 
-export default function SipStreakLayout({ children }) {
+export default function RootLayout({ children }) {
   return (
-    <div style={{ minHeight: '100vh', background: '#F5F0EB', color: '#2C1A2E' }}>
-      <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-      <AuthProvider>
-        {children}
-      </AuthProvider>
-    </div>
+    <html lang="en">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta name="theme-color" content="#FAFAF8" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+      </head>
+      <body>
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+      </body>
+    </html>
   );
 }

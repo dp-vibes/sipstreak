@@ -1,3 +1,56 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+:root {
+  /* Primary Wine Colors */
+  --wine: #7B2D3B;
+  --wine-deep: #5C1E2B;
+  --wine-light: #9B4255;
+  --wine-faint: rgba(123, 45, 59, 0.06);
+  
+  /* Gold Accents */
+  --gold: #C9A96E;
+  --gold-light: #D4B87D;
+  --gold-muted: #A8905C;
+  
+  /* Sage */
+  --sage: #567A4C;
+  
+  /* Backgrounds */
+  --bg-primary: #FAFAF8;
+  --bg-cream: #F5F0E8;
+  --bg-warm: #EDE8E0;
+  --bg-card: #FFFDF9;
+  
+  /* Text */
+  --text-primary: #2C2C2C;
+  --text-secondary: #6B6560;
+  --text-hint: #9B9590;
+  
+  /* Fonts */
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: rgba(123, 45, 59, 0.15);
+  color: var(--text-primary);
+}
+
+/* Prevent iOS zoom on inputs */
+input, select, textarea {
+  font-size: 16px !important;
+}
