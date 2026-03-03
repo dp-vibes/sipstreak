@@ -118,11 +118,6 @@ function StudyContent() {
           </motion.div>
         </AnimatePresence>
 
-        <p style={{ marginTop: '20px', fontSize: '12px', color: 'var(--text-hint)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          swipe left if unsure · swipe right if you know it
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </p>
       </div>
       <TabBar />
     </AppShell>
