@@ -1,5 +1,6 @@
 import "./globals.css";
 import { AuthProvider } from "./components/AuthContext";
+import ThemeProvider from "./components/ThemeProvider";
 
 export const metadata = {
   title: "SipStreak — Master Wine Knowledge",
@@ -21,9 +22,11 @@ export default function RootLayout({ children }) {
         <meta name="theme-color" content="#FAFAF8" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <AuthProvider>
-          {children}
+          <ThemeProvider>
+            {children}
+          </ThemeProvider>
         </AuthProvider>
       </body>
     </html>

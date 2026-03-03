@@ -1,16 +1,14 @@
 "use client";
 import { useState, useRef } from "react";
 import { motion, useMotionValue, useTransform } from "framer-motion";
-import { getMasteryPhase } from "../utils/storage";
 
-export default function FlashCard({ card, onSwipe, themeColors, masteryLevel = 0 }) {
+export default function FlashCard({ card, onSwipe, masteryLevel = 0 }) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [swiped, setSwiped] = useState(false);
-  const constraintsRef = useRef(null);
   const x = useMotionValue(0);
-  const rotate = useTransform(x, [-200, 0, 200], [-15, 0, 15]);
-  const greenOpacity = useTransform(x, [0, 60, 150], [0, 0.2, 0.7]);
-  const redOpacity = useTransform(x, [-150, -60, 0], [0.7, 0.2, 0]);
+  const rotate = useTransform(x, [-200, 0, 200], [-12, 0, 12]);
+  const greenOpacity = useTransform(x, [0, 60, 150], [0, 0.15, 0.6]);
+  const redOpacity = useTransform(x, [-150, -60, 0], [0.6, 0.15, 0]);
 
   const handleDragEnd = (_, info) => {
     if (swiped) return;
@@ -21,71 +19,96 @@ export default function FlashCard({ card, onSwipe, themeColors, masteryLevel = 0
 
   if (swiped) return null;
 
+  const deckLabel = card.deckId === 'major-grapes' ? 'Grape Variety'
+    : card.deckId === 'wine-vocab' ? 'Wine Vocabulary' : 'Wine Basics';
+
   return (
-    <div className="relative w-full max-w-sm mx-auto" ref={constraintsRef}>
+    <div style={{ position: 'relative', width: '100%', maxWidth: '380px', margin: '0 auto' }}>
       <motion.div
         drag="x" dragConstraints={{ left: 0, right: 0 }} dragElastic={0.7}
-        onDragEnd={handleDragEnd} style={{ x, rotate }}
-        className="relative cursor-grab active:cursor-grabbing touch-none"
+        onDragEnd={handleDragEnd} style={{ x, rotate, touchAction: 'none', cursor: 'grab' }}
       >
-        <motion.div style={{ opacity: greenOpacity }}
-          className="absolute inset-0 rounded-3xl z-10 pointer-events-none flex items-center justify-center">
-          <div className="absolute inset-0 rounded-3xl border-4 border-[#5C7A52]" style={{ background: "rgba(92,122,82,0.15)" }} />
-          <span className="text-6xl">✅</span>
+        {/* Swipe overlays */}
+        <motion.div style={{ opacity: greenOpacity, position: 'absolute', inset: 0, borderRadius: '16px', zIndex: 10, pointerEvents: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ position: 'absolute', inset: 0, borderRadius: '16px', border: '3px solid var(--sage)', background: 'rgba(86,122,76,0.1)' }} />
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" strokeWidth="2.5"><path d="M20 6L9 17l-5-5"/></svg>
         </motion.div>
-        <motion.div style={{ opacity: redOpacity }}
-          className="absolute inset-0 rounded-3xl z-10 pointer-events-none flex items-center justify-center">
-          <div className="absolute inset-0 rounded-3xl border-4 border-[#722F37]" style={{ background: "rgba(114,47,55,0.15)" }} />
-          <span className="text-6xl">❌</span>
+        <motion.div style={{ opacity: redOpacity, position: 'absolute', inset: 0, borderRadius: '16px', zIndex: 10, pointerEvents: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ position: 'absolute', inset: 0, borderRadius: '16px', border: '3px solid var(--wine)', background: 'rgba(123,45,59,0.1)' }} />
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--wine)" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </motion.div>
 
-        <div onClick={() => setIsFlipped(!isFlipped)}
-          className="relative w-full rounded-3xl border p-6 min-h-[380px] flex flex-col justify-center select-none overflow-hidden shadow-lg"
-          style={{ background: '#FFFDF9', borderColor: '#722F37' + '20' }}>
-          
+        {/* Card */}
+        <div onClick={() => setIsFlipped(!isFlipped)} style={{
+          position: 'relative', width: '100%', borderRadius: '16px',
+          border: '1px solid rgba(123,45,59,0.08)',
+          padding: '24px 20px', minHeight: '340px',
+          display: 'flex', flexDirection: 'column', justifyContent: 'center',
+          background: 'var(--bg-card)',
+          boxShadow: '0 4px 20px rgba(44,44,44,0.06)',
+          userSelect: 'none', overflow: 'hidden',
+        }}>
+          {/* Level badge */}
+          <div style={{
+            position: 'absolute', top: '14px', right: '14px',
+            padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 600,
+            background: 'rgba(123,45,59,0.06)', color: 'var(--wine)',
+          }}>
+            Lv.{masteryLevel}
+          </div>
+
           {!isFlipped ? (
-            <div className="flex flex-col items-center text-center gap-4">
-              <div className="text-xs uppercase tracking-[0.2em] font-medium" style={{ color: '#8C8279' }}>
-                {card.deckId === 'major-grapes' ? '🍇 Grape Variety' : card.deckId === 'wine-vocab' ? '📝 Wine Term' : '🍷 Wine Basics'}
-              </div>
-              <div className="font-bold break-words w-full px-2" style={{
-                fontFamily: "'Playfair Display', serif",
-                color: '#722F37',
-                fontSize: card.frontText.length > 20 ? "1.5rem" : card.frontText.length > 14 ? "1.875rem" : "2.25rem",
-                lineHeight: 1.2,
+            /* ── FRONT: Question only ── */
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '12px' }}>
+              <p style={{
+                fontSize: '10px', fontWeight: 600, letterSpacing: '1.5px', textTransform: 'uppercase',
+                color: 'var(--text-hint)',
+              }}>
+                {deckLabel}
+              </p>
+              <h2 style={{
+                fontFamily: 'var(--font-display)', fontWeight: 700, color: 'var(--wine)',
+                fontSize: card.frontText.length > 20 ? '22px' : card.frontText.length > 14 ? '26px' : '30px',
+                lineHeight: 1.2, padding: '0 8px',
               }}>
                 {card.frontText}
-              </div>
+              </h2>
               {card.hint && masteryLevel < 3 && (
-                <div className="text-xs px-3 py-1.5 rounded-full" style={{ background: '#C9A96E20', color: '#C9A96E' }}>
-                  💡 {card.hint}
-                </div>
+                <p style={{
+                  fontSize: '12px', color: 'var(--gold-muted)', fontStyle: 'italic',
+                  padding: '6px 14px', borderRadius: '20px', background: 'rgba(201,169,110,0.08)',
+                }}>
+                  {card.hint}
+                </p>
               )}
-              <div className="text-sm mt-4 flex items-center gap-1" style={{ color: '#8C8279' }}>
-                <span className="opacity-60">tap to reveal</span> <span>👆</span>
-              </div>
-              <div className="absolute top-4 right-4 px-2.5 py-1 rounded-full text-xs font-medium"
-                style={{ background: '#722F3715', color: '#722F37' }}>
-                Lv.{masteryLevel}
+              <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-hint)', fontSize: '12px' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M15 15l-6-6M9 9v6h6"/></svg>
+                tap to reveal
               </div>
             </div>
           ) : (
-            <div className="flex flex-col gap-3">
-              <div className="text-sm leading-relaxed" style={{ color: '#2C1A2E' }}>
+            /* ── BACK: Answer ── */
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <p style={{
+                fontSize: '10px', fontWeight: 600, letterSpacing: '1.5px', textTransform: 'uppercase',
+                color: 'var(--gold-muted)', marginBottom: '4px',
+              }}>
+                {card.frontText}
+              </p>
+              <div style={{ fontSize: '14px', lineHeight: 1.7, color: 'var(--text-primary)' }}>
                 {card.backText}
               </div>
               {card.extraData?.pronunciation && (
-                <div className="border-t pt-2" style={{ borderColor: '#722F3715' }}>
-                  <div className="text-xs uppercase tracking-wider mb-0.5" style={{ color: '#8C8279' }}>Pronunciation</div>
-                  <div className="text-sm italic" style={{ color: '#722F37' }}>{card.extraData.pronunciation}</div>
+                <div style={{ borderTop: '1px solid rgba(123,45,59,0.06)', paddingTop: '10px', marginTop: '4px' }}>
+                  <p style={{ fontSize: '10px', letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--text-hint)', marginBottom: '2px' }}>Pronunciation</p>
+                  <p style={{ fontSize: '14px', fontStyle: 'italic', color: 'var(--wine)' }}>{card.extraData.pronunciation}</p>
                 </div>
               )}
-              <div className="absolute top-4 right-4 px-2.5 py-1 rounded-full text-xs font-medium"
-                style={{ background: '#722F3715', color: '#722F37' }}>
-                Lv.{masteryLevel}
-              </div>
             </div>
           )}
+
+          {/* Bottom accent */}
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '2px', background: isFlipped ? 'linear-gradient(to right, var(--gold), transparent)' : 'transparent' }} />
         </div>
       </motion.div>
     </div>

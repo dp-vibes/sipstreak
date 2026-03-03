@@ -107,66 +107,48 @@ export function updateStreak(cardsStudied = 0, cardsCorrect = 0) {
 export const themes = {
   cellar: {
     name: "Wine Cellar",
-    primary: "#722F37",      // Merlot Red
-    secondary: "#C9A96E",    // Champagne Gold
-    cardBg: "#1a1015",
-    gradient: "from-[#722F37] to-[#C9A96E]",
-    bg: "#F5F0EB",
-    text: "#2C1A2E",
-    accent: "#D4899F",
-    success: "#5C7A52",
+    colors: { '--wine': '#7B2D3B', '--wine-deep': '#5C1E2B', '--gold': '#C9A96E', '--gold-muted': '#A8905C', '--sage': '#567A4C', '--bg-primary': '#FAFAF8', '--bg-cream': '#F5F0E8', '--bg-card': '#FFFDF9', '--text-primary': '#2C2C2C', '--text-secondary': '#5A5652', '--text-hint': '#9B9590' },
+    swatch: '#7B2D3B',
   },
   vineyard: {
     name: "Vineyard",
-    primary: "#5C7A52",      // Vineyard Green
-    secondary: "#C9A96E",    // Champagne Gold
-    cardBg: "#0f1a12",
-    gradient: "from-[#5C7A52] to-[#C9A96E]",
-    bg: "#F5F0EB",
-    text: "#2C1A2E",
-    accent: "#722F37",
-    success: "#5C7A52",
+    colors: { '--wine': '#4A6741', '--wine-deep': '#385030', '--gold': '#C9A96E', '--gold-muted': '#A8905C', '--sage': '#567A4C', '--bg-primary': '#F7FAF5', '--bg-cream': '#EEF3E8', '--bg-card': '#FCFDFB', '--text-primary': '#2C2C2C', '--text-secondary': '#5A5652', '--text-hint': '#8A9585' },
+    swatch: '#4A6741',
   },
   rosé: {
     name: "Rosé Garden",
-    primary: "#D4899F",      // Rosé Blush
-    secondary: "#C9A96E",    // Champagne Gold
-    cardBg: "#1a1218",
-    gradient: "from-[#D4899F] to-[#C9A96E]",
-    bg: "#FFF5F8",
-    text: "#2C1A2E",
-    accent: "#722F37",
-    success: "#5C7A52",
-  },
-  noir: {
-    name: "Grape Noir",
-    primary: "#C9A96E",      // Champagne Gold
-    secondary: "#722F37",    // Merlot Red
-    cardBg: "#150f18",
-    gradient: "from-[#C9A96E] to-[#722F37]",
-    bg: "#2C1A2E",
-    text: "#F5F0EB",
-    accent: "#D4899F",
-    success: "#5C7A52",
+    colors: { '--wine': '#C76B8A', '--wine-deep': '#A4536E', '--gold': '#D4A574', '--gold-muted': '#B8906A', '--sage': '#8BA68A', '--bg-primary': '#FFF8FA', '--bg-cream': '#FFF0F4', '--bg-card': '#FFFCFD', '--text-primary': '#3A2830', '--text-secondary': '#6A525A', '--text-hint': '#A8909A' },
+    swatch: '#C76B8A',
   },
   champagne: {
     name: "Champagne",
-    primary: "#B8860B",      // Dark Gold
-    secondary: "#F5F0EB",    // Cream
-    cardBg: "#1a1810",
-    gradient: "from-[#B8860B] to-[#F5F0EB]",
-    bg: "#FFFEF5",
-    text: "#2C1A2E",
-    accent: "#722F37",
-    success: "#5C7A52",
+    colors: { '--wine': '#B8860B', '--wine-deep': '#8B6508', '--gold': '#D4A843', '--gold-muted': '#B8942E', '--sage': '#8A9A6A', '--bg-primary': '#FFFDF5', '--bg-cream': '#FFF8E8', '--bg-card': '#FFFEFB', '--text-primary': '#2C2818', '--text-secondary': '#5A5440', '--text-hint': '#9A9480' },
+    swatch: '#B8860B',
+  },
+  noir: {
+    name: "Grape Noir",
+    colors: { '--wine': '#C9A96E', '--wine-deep': '#A88B50', '--gold': '#8B6F47', '--gold-muted': '#7A6240', '--sage': '#6A7A5A', '--bg-primary': '#1E1A22', '--bg-cream': '#2A2530', '--bg-card': '#28232E', '--text-primary': '#F0ECE8', '--text-secondary': '#B0A8A0', '--text-hint': '#706868' },
+    swatch: '#2C1A2E',
   },
 };
 
 export function getTheme() {
-  if (typeof window === 'undefined') return 'cellar';
-  return localStorage.getItem(KEYS.THEME) || 'cellar';
+  try { return localStorage.getItem('sipstreak_theme') || 'cellar'; } catch { return 'cellar'; }
 }
-export function setTheme(themeKey) { localStorage.setItem(KEYS.THEME, themeKey); }
+
+export function setTheme(key) {
+  localStorage.setItem('sipstreak_theme', key);
+  applyTheme(key);
+}
+
+export function applyTheme(key) {
+  const theme = themes[key || 'cellar'];
+  if (!theme) return;
+  const root = document.documentElement;
+  Object.entries(theme.colors).forEach(([prop, value]) => {
+    root.style.setProperty(prop, value);
+  });
+}
 export function getCurrentThemeColors() { return themes[getTheme()] || themes.cellar; }
 
 // ==========================================
