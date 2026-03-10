@@ -75,7 +75,7 @@ export default function ProgressPage() {
             const deckMastered = deckCards.filter(c => (progress[c.id]?.masteryLevel || 0) >= 5).length;
             const pct = deckCards.length > 0 ? Math.round((deckMastered / deckCards.length) * 100) : 0;
             return (
-              <motion.div key={deck.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
+              <motion.div key={deck.id} 
                 style={{ padding: '14px 16px', borderRadius: '14px', background: 'var(--bg-card)', border: '1px solid rgba(123,45,59,0.06)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
                   <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'rgba(123,45,59,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>

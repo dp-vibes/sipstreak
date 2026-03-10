@@ -64,14 +64,14 @@ export default function DeckPicker({ mode = "study" }) {
             const stats = getDeckStats(deck.id);
             const pct = stats.total > 0 ? Math.round((stats.mastered / stats.total) * 100) : 0;
             return (
-              <motion.button key={deck.id}
-                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-                whileTap={{ scale: 0.98 }}
+              <button key={deck.id}
+                
+                
                 onClick={() => handleSelect(deck.id)}
                 style={{
                   display: 'flex', alignItems: 'center', gap: '14px', padding: '16px',
                   background: 'var(--bg-card)', border: '1px solid rgba(123,45,59,0.06)',
-                  borderRadius: '14px', cursor: 'pointer', textAlign: 'left', width: '100%',
+                  borderRadius: '14px', cursor: 'pointer', textAlign: 'left', width: '100%', boxShadow: '0 1px 4px rgba(44,44,44,0.04)',
                   transition: 'all 0.15s',
                 }}
               >
@@ -94,7 +94,7 @@ export default function DeckPicker({ mode = "study" }) {
                   </div>
                 </div>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-hint)" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
-              </motion.button>
+              </button>
             );
           })}
         </div>

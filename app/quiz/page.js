@@ -7,6 +7,23 @@ import { getProgress, updateCardProgress, updateStreak, checkAndAwardTrophies, c
 import AppShell from "../components/AppShell";
 import TabBar from "../components/TabBar";
 
+function formatOptionText(text) {
+  const parts = [];
+  let remaining = text;
+  let key = 0;
+  while (remaining.includes('**')) {
+    const start = remaining.indexOf('**');
+    if (start > 0) parts.push(<span key={key++}>{remaining.slice(0, start)}</span>);
+    remaining = remaining.slice(start + 2);
+    const end = remaining.indexOf('**');
+    if (end === -1) { parts.push(<span key={key++}>**{remaining}</span>); remaining = ''; break; }
+    parts.push(<span key={key++} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, color: 'inherit' }}>{remaining.slice(0, end)}</span>);
+    remaining = remaining.slice(end + 2);
+  }
+  if (remaining) parts.push(<span key={key++}>{remaining}</span>);
+  return parts.length > 0 ? parts : text;
+}
+
 function QuizContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -163,13 +180,13 @@ function QuizContent() {
                 style={{
                   width: '100%', padding: '14px 16px', borderRadius: '12px',
                   border: `1px solid ${borderColor}`, background: bg,
-                  textAlign: 'left', fontSize: '13px', lineHeight: 1.5,
+                  textAlign: 'left', fontSize: '14px', lineHeight: 1.6,
                   color: textColor, cursor: selected === null ? 'pointer' : 'default',
                   fontFamily: 'var(--font-body)', display: 'flex', alignItems: 'center',
-                  justifyContent: 'space-between', gap: '10px', transition: 'all 0.2s',
+                  justifyContent: 'space-between', gap: '10px', transition: 'all 0.2s', boxShadow: '0 1px 4px rgba(44,44,44,0.04)',
                 }}
               >
-                <span>{option.text}</span>
+                <span>{formatOptionText(option.text)}</span>
                 {rightIcon}
               </motion.button>
             );
